@@ -20,6 +20,7 @@ jobs:
     - run: npm ci
     - run: npm run build -- --production
     - run: npm run package
+    - run: sha256sum *.ipk
     - run: echo RELEASE_FILENAME_IPK=`ls *.ipk` >> $GITHUB_ENV
     - run: npm run manifest
 
