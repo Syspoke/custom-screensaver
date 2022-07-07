@@ -12,27 +12,25 @@ var
 	ToggleItem = require('moonstone/ToggleItem'),
 	Group = require('enyo/Group');
 
-var basePath = "/media/developer/apps/usr/palm/applications/org.webosbrew.custom-screensaver";
+var basePath = "/media/developer/apps/usr/palm/applications/org.webosbrew.webostools";
 var applyPath = basePath + "/assets/apply.sh";
-var linkPath = "/var/lib/webosbrew/init.d/50-custom-screensaver";
+var linkPath = "/var/lib/webosbrew/init.d/50-webostools";
 module.exports = kind({
   name: 'MainPanel',
   kind: Panel,
-  title: 'webOS Custom Screensaver',
-  titleBelow: "webosbrew.org",
+  title: 'webOS Tools',
+  titleBelow: "LG webOS testing tools",
   headerType: 'medium',
   components: [
     {kind: FittableColumns, classes: 'enyo-center', fit: true, components: [
       {kind: Scroller, fit: true, components: [
         {classes: 'moon-hspacing', controlClasses: 'moon-12h', components: [
           {components: [
-            // {kind: Divider, content: 'Toggle Items'},
-            {kind: ToggleItem, name: "autostart", content: 'Autostart', checked: true, disabled: true, onchange: "autostartToggle"},
-            {kind: Item, components: [
-              {kind: Marquee.Text, content: 'Apply temporarily'},
-              {kind: BodyText, style: 'margin: 10px 0', content: 'This will only enable custom screensaver until a reboot'},
-            ], ontap: "temporaryApply"},
-            {kind: Item, content: 'Test run screensaver', ontap: "testRun"},
+            {kind: Divider, content: 'Restore SSH,Telnet and co. [non-persistent]\n(Use only with a rooted TV without SSH access)', centered: true},
+			{kind: Item, content: '1) LAUNCH HBC SCRIPT', ontap: "testRun1"},
+			{kind: Item, content: '2) LAUNCH TELNET', ontap: "testRun2"},
+			{kind: Item, content: '3) LAUNCH HYPERHDR', ontap: "testRun3"},
+
           ]},
         ]},
       ]},
@@ -54,13 +52,16 @@ module.exports = kind({
     });
   },
 
-  testRun: function (command) {
-    this.exec("luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'");
+  testRun1: function (command) {
+    this.exec("/media/developer/apps/usr/palm/services/org.webosbrew.hbchannel.service/startup.sh");
+  },
+  testRun2: function (command) {
+    this.exec("telnetd -l /bin/sh");
+  },
+  testRun3: function (command) {
+    this.exec("/media/developer/apps/usr/palm/applications/org.webosbrew.webostools/assets/hyperhdr.sh");
   },
 
-  temporaryApply: function (command) {
-    this.exec(applyPath); 
-  },
 
   exec: function (command) {
     console.info(command);
@@ -81,18 +82,7 @@ module.exports = kind({
 
   onStatusCheck: function (sender, evt) {
     console.info(sender, evt);
-    // this.$.result.set('content', JSON.stringify(evt.data));
-    this.$.autostart.set('disabled', false);
-    this.$.autostart.set('checked', evt.stdoutString && evt.stdoutString.trim() == applyPath);
-  },
+     this.$.result.set('content', JSON.stringify(evt.data));
+ },
 
-  autostartToggle: function (sender) {
-    console.info("toggle:", sender);
-
-    if (sender.active) {
-      this.exec('mkdir -p /var/lib/webosbrew/init.d && ln -sf ' + applyPath + ' ' + linkPath);
-    } else {
-      this.exec('rm -rf ' + linkPath);
-    }
-  },
 });
