@@ -1,12 +1,12 @@
 {
-    "id": "org.webosbrew.custom-screensaver",
-    "version": "1.0.1",
+    "id": "org.webosbrew.webostools",
+    "version": "1.0.6",
     "vendor": "webosbrew.org",
-    "title": "Custom Screensaver",
+    "title": "webOStools",
     "icon": "assets/icon80.png",
     "largeIcon": "assets/icon130.png",
     "main": "index.html",
-    "iconColor": "#ffffff",
+    "iconColor": "#000000",
     "type": "web",
-    "appDescription": "The last custom webOS Screensaver you will ever need"
+    "appDescription": "Tools for webOS"
 }
